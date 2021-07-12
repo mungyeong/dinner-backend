@@ -1,0 +1,9 @@
+GET http://localhost:8000/member/
+Content-Encoding: UTF-8
+Content-Type: application/json
+
+{
+"name":"jmk",
+"email":"jmk@gmail.com",
+"password":"1234567899"
+}
