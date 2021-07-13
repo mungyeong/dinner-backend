@@ -1,12 +1,13 @@
 package com.github.gyeong5961.dinner.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.gyeong5961.dinner.dto.Map;
 import com.github.gyeong5961.dinner.service.MapService;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -15,43 +16,44 @@ public class MapController {
 
     private final MapService mapService;
 
-    private final Gson gson;
+    private final ObjectMapper mapper;
 
-    public MapController(MapService mapService, Gson gson) {
+    public MapController(MapService mapService, ObjectMapper mapper) {
         this.mapService = mapService;
-        this.gson = gson;
+        this.mapper = mapper;
     }
 
-
     @GetMapping(value = "/{id}")
-    public String getMaps(@PathVariable(value = "id") Long id) {
-        return gson.toJson(mapService.find(id));
+    public Map getMaps(@PathVariable Long id){
+        return mapService.find(id);
     }
 
     @GetMapping(path = "/")
-    public @ResponseBody String getAllMaps() {
-        return gson.toJson(mapService.findAll());
+    public List<Map> getAllMaps() {
+        return mapService.findAll();
     }
 
     @PostMapping(path = "/")
-    public @ResponseBody String postMaps(@RequestBody String info) {
-        Map Maps = gson.fromJson(info, Map.class);
-        return gson.toJson(mapService.insert(Maps)) ;
+    public Map postMaps(@RequestBody String info) throws JsonProcessingException {
+        Map map = mapper.readValue(info, Map.class);
+        return mapService.insert(map);
     }
 
-    @PutMapping(value = "/{id}")
-    public @ResponseBody String putMaps(@Validated Map Maps, @PathVariable(value = "id") Long id) {
-        return gson.toJson(mapService.update(Maps));
+    @PutMapping(value = "/")
+    public Map putMaps(@RequestBody String info) throws JsonProcessingException {
+        Map map = mapper.readValue(info, Map.class);
+        return mapService.update(map);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteMaps(@PathVariable(value = "id") Long id) {
+    public void deleteMaps(@PathVariable Long id) {
         mapService.delete(id);
     }
 
     @DeleteMapping(value = "/")
-    public void deleteMaps(@RequestBody String list) {
-        List<Map> Maps = gson.fromJson(list,new TypeToken<List<Map>>(){}.getType());
+    public void deleteMaps(@RequestBody String list) throws JsonProcessingException {
+        List<Map> Maps = mapper.readValue(list, new TypeReference<List<Map>>() {
+        });
         mapService.delete(Maps);
     }
 }

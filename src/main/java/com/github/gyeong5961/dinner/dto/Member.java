@@ -1,11 +1,13 @@
 package com.github.gyeong5961.dinner.dto;
 
+import com.fasterxml.jackson.annotation.*;
 import com.github.gyeong5961.dinner.entity.BaseEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
+@Where(clause = "is_deleted = 'false'")
 public class Member extends BaseEntity {
 
     @Id
@@ -32,13 +35,14 @@ public class Member extends BaseEntity {
     @NonNull
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "member_map", //조인테이블명
-        joinColumns = @JoinColumn(name="member_id"),  //외래키
-        inverseJoinColumns = @JoinColumn(name="map_id") //반대 엔티티의 외래키
-            )
+    @JsonManagedReference
     @ToString.Exclude
-    private List<Map> maps;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "member_map", //조인테이블명
+            joinColumns = @JoinColumn(name = "member_id"),  //외래키
+            inverseJoinColumns = @JoinColumn(name = "map_id") //반대 엔티티의 외래키
+    )
+    private List<Map> maps = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

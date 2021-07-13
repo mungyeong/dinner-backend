@@ -3,6 +3,7 @@ package com.github.gyeong5961.dinner.service;
 import com.github.gyeong5961.dinner.dto.Member;
 import com.github.gyeong5961.dinner.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -23,8 +24,8 @@ public class MemberService {
         return memberRepository.saveAndFlush(maps);
     }
 
-    public Member update(Member maps) {
-        return memberRepository.saveAndFlush(maps);
+    public Member update(Member member) {
+        return memberRepository.saveAndFlush(member);
     }
 
     public Member find(Long id) {
@@ -34,13 +35,11 @@ public class MemberService {
     public void delete(Long id) {
         Member member = memberRepository.findById(id).orElse(new Member());
         member.setDeleted(Boolean.TRUE);
-        memberRepository.save(member);
+        memberRepository.saveAndFlush(member);
     }
 
     public void delete(List<Member> members) {
-        for(int i=0;i<members.size();i++){
-            Member member = members.get(0);
-            System.out.println(member.getId());
+        for (Member member : members) {
             member.setDeleted(Boolean.TRUE);
         }
         memberRepository.saveAll(members);

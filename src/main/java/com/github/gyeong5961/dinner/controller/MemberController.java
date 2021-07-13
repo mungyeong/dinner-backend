@@ -1,64 +1,86 @@
 package com.github.gyeong5961.dinner.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.gyeong5961.dinner.dto.Map;
 import com.github.gyeong5961.dinner.dto.Member;
+import com.github.gyeong5961.dinner.service.MapService;
 import com.github.gyeong5961.dinner.service.MemberService;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 
 
 @RestController
-@EnableWebMvc
 @RequestMapping("/member")
 public class MemberController {
 
     private final MemberService memberService;
 
-    private final Gson gson;
+    private final MapService mapService;
 
-    public MemberController(MemberService memberService, Gson gson) {
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    public MemberController(MemberService memberService, MapService mapService) {
         this.memberService = memberService;
-        this.gson = gson;
+        this.mapService = mapService;
     }
 
 
     @GetMapping(value = "/{id}")
-    public String getMember(@PathVariable(value = "id") Long id) {
-        return gson.toJson(memberService.find(id));
+    public Member getMember(@PathVariable Long id){
+        return memberService.find(id);
     }
 
     @GetMapping(path = "/")
-    public String getAllMember() {
-        return gson.toJson(memberService.findAll());
+    public List<Member> getAllMember(){
+        return memberService.findAll();
     }
 
     @PostMapping(path = "/")
-    public String postMember(@RequestBody String info) {
-        Member member = gson.fromJson(info, Member.class);
-        return gson.toJson(memberService.insert(member));
+    public Member postMember(@RequestBody String info) throws JsonProcessingException {
+        Member member = mapper.readValue(info, Member.class);
+        return memberService.insert(member);
     }
 
     @PutMapping(value = "/{id}")
-    public String putMember(@Validated Member member, @PathVariable(value = "id") Long id) {
+    public Member putMember(@RequestBody String info, @PathVariable Long id) throws JsonProcessingException {
+        Member member = mapper.readValue(info, Member.class);
+        member.setId(id);
+        return memberService.update(member);
+    }
 
-        return gson.toJson(memberService.update(member));
+    @PutMapping(value = "/")
+    public Member putMembers(@RequestBody String info) throws JsonProcessingException {
+        Member member = mapper.readValue(info, Member.class);
+        return memberService.update(member);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteMember(@PathVariable(value = "id") Long id) {
+    public void deleteMember(@PathVariable Long id) {
         memberService.delete(id);
     }
 
     @DeleteMapping(value = "/")
-    public void deleteMembers(@RequestBody String list) {
-        List<Member> members = gson.fromJson(list,new TypeToken<List<Member>>(){}.getType());
+    public void deleteMembers(@RequestBody String infos) throws JsonProcessingException {
+        List<Member> members = mapper.readValue(infos, new TypeReference<List<Member>>() {
+        });
         memberService.delete(members);
+    }
+
+    @PutMapping(value = "/{member_id}/{map_id}")
+    public Member addMap(
+            @PathVariable Long member_id,
+            @PathVariable Long map_id) throws JsonProcessingException {
+        Member member = memberService.find(member_id);
+        Map map = mapService.find(map_id);
+        List<Map> maps = member.getMaps();
+        if (!maps.contains(map)) {
+            member.getMaps().add(map);
+        }
+        member = memberService.update(member);
+        return member;
     }
 
 }

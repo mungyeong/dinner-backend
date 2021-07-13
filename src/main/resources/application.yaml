@@ -1,8 +1,11 @@
+
 server:
   port: 8000
   servlet:
     encoding:
+      enabled: true
       charset: UTF-8
+      force-response: true
 kakao-api:
   REQUEST_URI: https://dapi.kakao.com/v2/local/search/keyword.json
   REST_API_KEY: "04e8cb4517f26fb89660073342a5a53c"

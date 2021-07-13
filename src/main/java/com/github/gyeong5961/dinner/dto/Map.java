@@ -1,11 +1,13 @@
 package com.github.gyeong5961.dinner.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.github.gyeong5961.dinner.entity.BaseEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,10 +18,12 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
+@Where(clause = "is_deleted = 'false'")
 public class Map extends BaseEntity {
 
     @Id
     @Column(name = "map_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String place_name;
@@ -33,21 +37,22 @@ public class Map extends BaseEntity {
     private String y;
     private String place_url;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "member_map", //조인테이블명
             joinColumns = @JoinColumn(name = "map_id"),  //외래키
             inverseJoinColumns = @JoinColumn(name = "member_id") //반대 엔티티의 외래키
     )
-    @ToString.Exclude
-    private List<Member> members;
+    private List<Member> members = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Map maps = (Map) o;
+        Map map = (Map) o;
 
-        return Objects.equals(id, maps.id);
+        return Objects.equals(id, map.id);
     }
 
     @Override

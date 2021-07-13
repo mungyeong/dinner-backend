@@ -34,10 +34,14 @@ public class MapService {
 
     public void delete(Long id) {
         Map Maps = mapRepository.findById(id).orElse(new Map());
-        mapRepository.save(Maps);
+        Maps.setDeleted(true);
+        mapRepository.saveAndFlush(Maps);
     }
 
     public void delete(List<Map> Maps) {
+        for(Map map: Maps){
+            map.setDeleted(true);
+        }
         mapRepository.saveAll(Maps);
     }
 
