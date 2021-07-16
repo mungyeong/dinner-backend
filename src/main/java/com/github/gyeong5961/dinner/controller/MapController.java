@@ -6,12 +6,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.gyeong5961.dinner.dto.Map;
 import com.github.gyeong5961.dinner.service.MapService;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/map")
+@RequestMapping("/api/map")
 public class MapController {
 
     private final MapService mapService;
@@ -28,18 +29,18 @@ public class MapController {
         return mapService.find(id);
     }
 
-    @GetMapping(path = "/")
+    @GetMapping(path = "")
     public List<Map> getAllMaps() {
         return mapService.findAll();
     }
 
-    @PostMapping(path = "/")
+    @PostMapping(path = "")
     public Map postMaps(@RequestBody String info) throws JsonProcessingException {
         Map map = mapper.readValue(info, Map.class);
         return mapService.insert(map);
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "")
     public Map putMaps(@RequestBody String info) throws JsonProcessingException {
         Map map = mapper.readValue(info, Map.class);
         return mapService.update(map);
@@ -50,7 +51,7 @@ public class MapController {
         mapService.delete(id);
     }
 
-    @DeleteMapping(value = "/")
+    @DeleteMapping(value = "")
     public void deleteMaps(@RequestBody String list) throws JsonProcessingException {
         List<Map> Maps = mapper.readValue(list, new TypeReference<List<Map>>() {
         });

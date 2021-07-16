@@ -1,13 +1,14 @@
 package com.github.gyeong5961.dinner.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.github.gyeong5961.dinner.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators.IntSequenceGenerator;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,36 +16,46 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 @Where(clause = "is_deleted = 'false'")
 public class Map extends BaseEntity {
 
     @Id
     @Column(name = "map_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String place_name;
-    private String category_name;
-    private String category_group_code;
-    private String category_group_name;
+    @JsonAlias("place_name")
+    @Column(name = "place_name")
+    private String placeName;
+
+    @JsonAlias("category_name")
+    @Column(name = "category_name")
+    private String categoryName;
+
+    @JsonAlias("category_group_code")
+    @Column(name = "category_group_code")
+    private String categoryGroupCode;
+
+    @JsonAlias("category_group_name")
+    @Column(name = "category_group_name")
+    private String categoryGroupName;
+
     private String phone;
-    private String address_name;
-    private String road_address_name;
+
+    @JsonAlias("address_name")
+    @Column(name = "address_name")
+    private String addressName;
+
+    @JsonAlias("road_address_name")
+    @Column(name = "road_address_name")
+    private String roadAddressName;
+
     private String x;
     private String y;
-    private String place_url;
 
-    @JsonBackReference
-    @ToString.Exclude
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "member_map", //조인테이블명
-            joinColumns = @JoinColumn(name = "map_id"),  //외래키
-            inverseJoinColumns = @JoinColumn(name = "member_id") //반대 엔티티의 외래키
-    )
-    private List<Member> members = new ArrayList<>();
+    @JsonAlias("place_url")
+    @Column(name = "place_url")
+    private String placeUrl;
 
     @Override
     public boolean equals(Object o) {

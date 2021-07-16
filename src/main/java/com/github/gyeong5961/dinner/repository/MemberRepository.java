@@ -22,4 +22,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Where(clause = "")
     List<Member> findAllAdmin();
 
+    Member findByName(String name);
+
 }

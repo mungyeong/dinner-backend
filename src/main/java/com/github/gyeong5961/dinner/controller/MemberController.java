@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/api/member")
 public class MemberController {
 
     private final MemberService memberService;
@@ -33,12 +33,12 @@ public class MemberController {
         return memberService.find(id);
     }
 
-    @GetMapping(path = "/")
+    @GetMapping
     public List<Member> getAllMember(){
         return memberService.findAll();
     }
 
-    @PostMapping(path = "/")
+    @PostMapping
     public Member postMember(@RequestBody String info) throws JsonProcessingException {
         Member member = mapper.readValue(info, Member.class);
         return memberService.insert(member);
@@ -51,7 +51,7 @@ public class MemberController {
         return memberService.update(member);
     }
 
-    @PutMapping(value = "/")
+    @PutMapping
     public Member putMembers(@RequestBody String info) throws JsonProcessingException {
         Member member = mapper.readValue(info, Member.class);
         return memberService.update(member);
@@ -62,7 +62,7 @@ public class MemberController {
         memberService.delete(id);
     }
 
-    @DeleteMapping(value = "/")
+    @DeleteMapping
     public void deleteMembers(@RequestBody String infos) throws JsonProcessingException {
         List<Member> members = mapper.readValue(infos, new TypeReference<List<Member>>() {
         });

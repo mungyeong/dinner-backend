@@ -1,5 +1,6 @@
-package com.github.gyeong5961.dinner.entity;
+package com.github.gyeong5961.dinner.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,19 +16,22 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @Setter
     @Column(columnDefinition = "boolean default false")
     private boolean isDeleted;
 
     @CreationTimestamp
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false, columnDefinition = "DATETIME DEFAULT now()")
-    private LocalDateTime created_at;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(columnDefinition = "DATETIME DEFAULT now()")
-    private LocalDateTime updated_at;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime updatedAt;
 }
