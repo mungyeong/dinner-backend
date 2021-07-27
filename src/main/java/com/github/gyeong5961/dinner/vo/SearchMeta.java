@@ -1,4 +1,4 @@
-package com.github.gyeong5961.dinner.dto;
+package com.github.gyeong5961.dinner.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,10 +1,11 @@
 package com.github.gyeong5961.dinner.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.gyeong5961.dinner.dto.Map;
 import com.github.gyeong5961.dinner.repository.MapRepository;
+import com.github.gyeong5961.dinner.vo.SearchMap;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MapService {
@@ -15,34 +16,7 @@ public class MapService {
         this.mapRepository = mapRepository;
     }
 
-    public List<Map> findAll() {
-        return mapRepository.findAll();
+    public Map addMap(Map map) {
+        return mapRepository.save(map);
     }
-
-
-    public Map insert(Map map) {
-        return mapRepository.saveAndFlush(map);
-    }
-
-    public Map update(Map map) {
-        return mapRepository.saveAndFlush(map);
-    }
-
-    public Map find(Long id) {
-        return mapRepository.findById(id).orElse(new Map());
-    }
-
-    public void delete(Long id) {
-        Map Maps = mapRepository.findById(id).orElse(new Map());
-        Maps.setDeleted(true);
-        mapRepository.saveAndFlush(Maps);
-    }
-
-    public void delete(List<Map> Maps) {
-        for(Map map: Maps){
-            map.setDeleted(true);
-        }
-        mapRepository.saveAll(Maps);
-    }
-
 }

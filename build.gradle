@@ -31,7 +31,6 @@ ext {
 dependencies {
     // https://mvnrepository.com/artifact/com.h2database/h2
     implementation 'com.h2database:h2:1.4.197'
-    implementation 'org.springframework.session:spring-session-core'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -44,11 +43,10 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     annotationProcessor 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    // Querydsl
-    // https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
+    implementation 'com.auth0:java-jwt:3.10.3'
     implementation 'com.querydsl:querydsl-jpa'
     implementation 'com.querydsl:querydsl-apt'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
 }
 
 test {

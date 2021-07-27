@@ -1,10 +1,7 @@
-package com.github.gyeong5961.dinner.dto;
+package com.github.gyeong5961.dinner.vo;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter

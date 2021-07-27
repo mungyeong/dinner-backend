@@ -1,86 +1,44 @@
 package com.github.gyeong5961.dinner.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.gyeong5961.dinner.dto.Map;
 import com.github.gyeong5961.dinner.dto.Member;
 import com.github.gyeong5961.dinner.service.MapService;
 import com.github.gyeong5961.dinner.service.MemberService;
+import com.github.gyeong5961.dinner.vo.SignUpInfo;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping(value = "/api/member")
 public class MemberController {
 
     private final MemberService memberService;
 
     private final MapService mapService;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
 
-    public MemberController(MemberService memberService, MapService mapService) {
+    public MemberController(MemberService memberService, MapService mapService, ObjectMapper mapper) {
         this.memberService = memberService;
         this.mapService = mapService;
+        this.mapper = mapper;
     }
 
-
-    @GetMapping(value = "/{id}")
-    public Member getMember(@PathVariable Long id){
-        return memberService.find(id);
+    @GetMapping("")
+    public List<Member> findMembers() {
+        return memberService.findMembers();
     }
 
-    @GetMapping
-    public List<Member> getAllMember(){
-        return memberService.findAll();
+    @GetMapping("/{idx}")
+    public Member findMember(@PathVariable Long idx) {
+        return memberService.findMember(idx);
     }
 
-    @PostMapping
-    public Member postMember(@RequestBody String info) throws JsonProcessingException {
-        Member member = mapper.readValue(info, Member.class);
-        return memberService.insert(member);
-    }
-
-    @PutMapping(value = "/{id}")
-    public Member putMember(@RequestBody String info, @PathVariable Long id) throws JsonProcessingException {
-        Member member = mapper.readValue(info, Member.class);
-        member.setId(id);
-        return memberService.update(member);
-    }
-
-    @PutMapping
-    public Member putMembers(@RequestBody String info) throws JsonProcessingException {
-        Member member = mapper.readValue(info, Member.class);
-        return memberService.update(member);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public void deleteMember(@PathVariable Long id) {
-        memberService.delete(id);
-    }
-
-    @DeleteMapping
-    public void deleteMembers(@RequestBody String infos) throws JsonProcessingException {
-        List<Member> members = mapper.readValue(infos, new TypeReference<List<Member>>() {
-        });
-        memberService.delete(members);
-    }
-
-    @PutMapping(value = "/{member_id}/{map_id}")
-    public Member addMap(
-            @PathVariable Long member_id,
-            @PathVariable Long map_id) throws JsonProcessingException {
-        Member member = memberService.find(member_id);
-        Map map = mapService.find(map_id);
-        List<Map> maps = member.getMaps();
-        if (!maps.contains(map)) {
-            member.getMaps().add(map);
-        }
-        member = memberService.update(member);
-        return member;
+    @PutMapping("")
+    public Member updateMember(@RequestBody Member info) {
+        return memberService.updateMember(info);
     }
 
 }

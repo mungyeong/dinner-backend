@@ -1,28 +1,29 @@
 package com.github.gyeong5961.dinner.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators.IntSequenceGenerator;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 @Entity
 @Where(clause = "is_deleted = 'false'")
+//@Builder
+@DynamicUpdate
+@NoArgsConstructor
 public class Map extends BaseEntity {
 
     @Id
-    @Column(name = "map_id")
-    private Long id;
+    @JsonAlias({"id", "idx"})
+    private Long idx;
 
     @JsonAlias("place_name")
     @Column(name = "place_name")
@@ -63,7 +64,7 @@ public class Map extends BaseEntity {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Map map = (Map) o;
 
-        return Objects.equals(id, map.id);
+        return Objects.equals(idx, map.idx);
     }
 
     @Override

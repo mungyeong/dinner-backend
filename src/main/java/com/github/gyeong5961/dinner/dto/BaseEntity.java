@@ -23,7 +23,6 @@ public abstract class BaseEntity {
     private boolean isDeleted;
 
     @CreationTimestamp
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false, columnDefinition = "DATETIME DEFAULT now()")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

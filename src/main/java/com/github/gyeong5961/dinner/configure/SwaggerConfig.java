@@ -16,7 +16,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
-
         return new ApiInfoBuilder()
                 .title("종각 음식점 추천 사이트")
                 .description("API")
@@ -31,7 +30,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors
                         .basePackage("com.github.gyeong5961.dinner.controller"))
-                .paths(PathSelectors.ant("/api/*"))
+                .paths(PathSelectors.ant("/api/**"))
                 .build();
     }
 

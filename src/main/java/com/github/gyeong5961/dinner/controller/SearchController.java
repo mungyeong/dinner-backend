@@ -3,7 +3,7 @@ package com.github.gyeong5961.dinner.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.gyeong5961.dinner.dto.Search;
+import com.github.gyeong5961.dinner.vo.Search;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@RequestMapping("/api/search")
+@RequestMapping(value = "/api/search")
 public class SearchController {
 
     private final ObjectMapper objectMapper;
@@ -35,13 +35,15 @@ public class SearchController {
 
 
     @GetMapping("")
-    public Search search(@RequestParam String query) throws JsonProcessingException {
+    public Search search(@RequestParam String query, @RequestParam(defaultValue = "1") int page) throws JsonProcessingException {
         URI temp = UriComponentsBuilder.fromHttpUrl(uri)
                 .queryParam("query", query)
                 .queryParam("category_group_code", "FD6")
                 .queryParam("x", "126.98574")
                 .queryParam("y", "37.56943")
                 .queryParam("radius", 300)
+                .queryParam("size", 10)
+                .queryParam("page", page)
                 .encode(StandardCharsets.UTF_8)
                 .build()
                 .toUri();
