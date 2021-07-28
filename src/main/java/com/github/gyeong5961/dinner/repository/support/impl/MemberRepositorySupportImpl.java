@@ -30,6 +30,8 @@ public class MemberRepositorySupportImpl extends QuerydslRepositorySupport imple
                 .leftJoin(map)
                 .on(map.idx.eq(memberMap.map.idx))
                 .fetchJoin()
+                .leftJoin(member.roles)
+                .fetchJoin()
                 .distinct()
                 .orderBy(member.idx.asc())
                 .fetch();
@@ -61,6 +63,14 @@ public class MemberRepositorySupportImpl extends QuerydslRepositorySupport imple
                 .on(map.idx.eq(memberMap.map.idx))
                 .fetchJoin()
                 .fetchFirst();
+    }
+
+    @Override
+    public boolean check(String memberId) {
+        return jpaQueryFactory
+                .selectFrom(member)
+                .where(member.MemberId.eq(memberId))
+                .fetchCount()<1;
     }
 
 }

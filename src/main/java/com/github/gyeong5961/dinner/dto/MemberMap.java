@@ -26,6 +26,7 @@ public class MemberMap {
     private Member member;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     @JoinColumn(name = "map_idx")
     private Map map;
 

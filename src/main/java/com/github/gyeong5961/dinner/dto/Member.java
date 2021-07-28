@@ -2,26 +2,25 @@ package com.github.gyeong5961.dinner.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -39,15 +38,18 @@ public class Member extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @NotNull
     @Size(max = 13)
     @Column(name = "id", unique = true, length = 40)
     private String MemberId;
 
+    @NotNull
     @Size(max = 20)
     @Column(length = 60)
     private String name;
 
 
+    @NotNull
     @ToString.Exclude
     @JsonIgnore
     @Size(max = 60)
@@ -59,7 +61,9 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(length = 100)
     private String email;
 
-    private String roles;
+    @JsonIgnore
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> roles;
 
 
     @JsonManagedReference
@@ -87,33 +91,41 @@ public class Member extends BaseEntity implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> roleList = new ArrayList<>();
-        roleList.add(new SimpleGrantedAuthority("ROLE_"+this.roles));
+        Set<GrantedAuthority> roleList = new HashSet<>();
+        for (String role: this.roles){
+            roleList.add(new SimpleGrantedAuthority("ROLE_" + role));
+        }
         return roleList;
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return MemberId;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return !isEnabled();
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return !isEnabled();
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return !isEnabled();
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return !isDeleted();
     }

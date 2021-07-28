@@ -11,4 +11,6 @@ public interface MemberRepositorySupport {
     Member findByIdx(Long idx);
 
     Member findByMemberId(String MemberId);
+
+    boolean check(String MemberId);
 }

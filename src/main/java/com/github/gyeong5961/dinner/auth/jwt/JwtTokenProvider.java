@@ -33,9 +33,7 @@ public class JwtTokenProvider {
     private String secretKey;
 
     private Algorithm algorithm;
-    //30분
-    private final int tokenValidMinute = 30;
-
+    
     private final MemberService userDetailsService;
 
     @PostConstruct
@@ -62,6 +60,7 @@ public class JwtTokenProvider {
 
     private Date expiresAt(int token) {
         Calendar cal = Calendar.getInstance();
+        int tokenValidMinute = 30;
         cal.setTime(new Date());
         if (token == 0) {
             cal.add(Calendar.MINUTE, tokenValidMinute);

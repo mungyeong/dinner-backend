@@ -158,8 +158,11 @@ insert into map (address_name, category_group_code, category_group_name, categor
 values ('서울 용산구 용산동2가 17-6', 'FD6', '음식점', '음식점 > 도시락 > 한솥도시락', 11634914, '02-792-0388', '한솥도시락 해방촌오거리점',
         'https://place.map.kakao.com/11634914', '서울 용산구 신흥로 85', '126.985796374886', '37.5454626268527');
 
-insert into member(id,email,password,roles,name)
-values ('user1','user1@naver.com','$2a$10$jG9vOC1OCeoqrN6fUK/UZu4bUdhq3QbEA0SU.Vj.bAFJrGvCVhxdK','USER','user1');
+insert into member(id,email,password,name)
+values ('user1','user1@naver.com','$2a$10$jG9vOC1OCeoqrN6fUK/UZu4bUdhq3QbEA0SU.Vj.bAFJrGvCVhxdK','user1');
+insert into member_roles
+values (1, 'USER');
+
 -- insert into member_map (map_idx, member_idx)
 -- values (11634914, 1);
 -- insert into member_map (map_idx, member_idx)

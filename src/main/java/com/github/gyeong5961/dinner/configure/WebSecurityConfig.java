@@ -44,11 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
                 .antMatchers("/auth/login**", "/auth/signup", "/h2-console**").permitAll()
-                .antMatchers("/api/member**").hasRole("USER")
-                .antMatchers("/api/map**").permitAll()
+                .antMatchers("/api/member**").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .anyRequest().permitAll()
                 .and().addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-
         ;
     }
 

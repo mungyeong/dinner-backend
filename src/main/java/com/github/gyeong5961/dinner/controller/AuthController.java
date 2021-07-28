@@ -5,6 +5,7 @@ import com.github.gyeong5961.dinner.dto.Member;
 import com.github.gyeong5961.dinner.service.AuthService;
 import com.github.gyeong5961.dinner.vo.Login;
 import com.github.gyeong5961.dinner.vo.SignUpInfo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,23 +14,20 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/auth", method = RequestMethod.POST)
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authservice;
 
-    public AuthController(AuthService authservice) {
-        this.authservice = authservice;
-    }
-
     @GetMapping("/check/{memberId}")
     public boolean idCheck(@PathVariable String memberId) {
-        return true;
+        return authservice.check(memberId);
     }
 
     @PostMapping("/login")
-    public JwtResponse login(@RequestBody Login login) {
+    public JwtResponse login(@RequestBody @Valid Login login) {
         JwtResponse jwtResponse = authservice.login(login);
-        Assert.notNull(jwtResponse.getAccessToken(), "맴버 정보가 없습니다..");
+        Assert.notNull(jwtResponse.getAccessToken(), "해당 맴버가 없습니다.");
         return jwtResponse;
     }
 

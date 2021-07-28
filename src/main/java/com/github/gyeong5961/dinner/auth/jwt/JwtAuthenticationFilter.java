@@ -9,8 +9,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,12 +22,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException, NullPointerException{
+            throws ServletException, IOException, NullPointerException {
         JwtResponse jwtResponse = jwtTokenProvider.resolveToken(request);
         String token = jwtResponse.getAccessToken();
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
-//             SecurityContext 에 Authentication 객체를 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
             response.setHeader(HttpHeaders.AUTHORIZATION, token);
             response.setHeader("refreshToken", jwtResponse.getRefreshToken());

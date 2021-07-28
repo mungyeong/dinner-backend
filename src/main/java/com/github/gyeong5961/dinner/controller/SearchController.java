@@ -1,59 +1,28 @@
 package com.github.gyeong5961.dinner.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.gyeong5961.dinner.service.SearchService;
 import com.github.gyeong5961.dinner.vo.Search;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
+import javax.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/api/search")
 public class SearchController {
 
-    private final ObjectMapper objectMapper;
-
-
-    @Value("${API.REQUEST.URI}")
-    private String uri;
-
-    @Value("${API.REQUEST.KEY}")
-    private String key;
-
-    public SearchController(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
+    private final SearchService searchService;
 
     @GetMapping("")
-    public Search search(@RequestParam String query, @RequestParam(defaultValue = "1") int page) throws JsonProcessingException {
-        URI temp = UriComponentsBuilder.fromHttpUrl(uri)
-                .queryParam("query", query)
-                .queryParam("category_group_code", "FD6")
-                .queryParam("x", "126.98574")
-                .queryParam("y", "37.56943")
-                .queryParam("radius", 300)
-                .queryParam("size", 10)
-                .queryParam("page", page)
-                .encode(StandardCharsets.UTF_8)
-                .build()
-                .toUri();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(HttpHeaders.AUTHORIZATION, "KakaoAK " + key);
-
-        HttpEntity<String> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> response = new RestTemplate().exchange(temp, HttpMethod.GET, httpEntity, String.class);
-        return objectMapper.readValue(response.getBody(), Search.class);
+    public Search search(@Valid @RequestParam String query, @RequestParam(defaultValue = "1") int page) {
+        System.out.println(query);
+        return searchService.search(query, page);
     }
 
 
